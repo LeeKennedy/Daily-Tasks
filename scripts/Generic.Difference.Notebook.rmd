@@ -1,0 +1,225 @@
+---
+title: "Comparison of Two Data Sets"
+output: html_notebook
+---
+
+```{r, echo = FALSE}
+# Instructions:
+# 1. Set data link correctly
+# 2. Identify the two components: A = Old, B = New
+# 3. Complete background section.
+
+```
+
+
+```{r, warning=FALSE}
+# Packages ---------------------------------------------------------------
+library(equivalence)
+library(dplyr)
+library(readxl)
+library(tidyr)
+library(ggplot2)
+
+```
+
+
+```{r}
+#Identify incoming data:
+data.in <- read_excel("W:/Quality Management System/Validation and Verification of methods/Chemistry/Project 203 - Investigation of the PV Room Lighting/PVAL01 comparisons.xlsx", 
+    skip = 2)
+data.in$A <- data.in$`without light`
+data.in$B <- data.in$`with light`
+An <- "Without_Light"
+Bn <- "With_Light"
+```
+
+
+
+```{r}
+#Clean up data to remove non-numberics:
+data.in$A <- sapply(data.in$A, as.numeric)
+data.in$B <- sapply(data.in$B, as.numeric)
+data.in <- na.omit(data.in)
+data.in$row_no <- as.numeric(rownames(data.in))
+
+```
+
+### Background ###
+
+
+
+
+### Data Spread ###
+
+Plot histogram of the original data set, to see data spread:
+
+```{r}
+hist(data.in$A, 
+     main = paste("Histogram of ",An),
+     breaks = 30,
+     col = "cornflowerblue",
+     xlab = "Level, g/100g")
+```
+
+Filter the data to remove outlying data and create the difference value. Two high results but leave them in for the moment. 
+
+```{r}
+
+data.in2 <- data.in %>%
+        filter(A < 0.5) %>%
+        mutate(Diff = B-A)
+
+```
+
+
+Plot the difference between the new and old methods:
+
+```{r}
+# Plot difference --------------------------------------------------------
+ave_diff <- mean(abs(data.in2$Diff))
+
+diff_plot <- ggplot(data.in2, aes(x=row_no, y = Diff)) +
+        geom_segment(aes(xend = row_no), yend = 0)+
+        geom_point(size = 4, shape = 21, col = "blue", fill = "cornflowerblue") +
+        geom_hline(yintercept = 0)+
+        theme_bw() +
+        theme(axis.line = element_line(size = 0.7, color = "black"), 
+              text = element_text(size = 14)) +
+        labs(x="Test ID", y="Difference, mg/100g",  title= "Difference between the old test and the new\n")
+diff_plot
+```
+Remove any outliers before proceding.  In the above plot, point 5 is suspect.
+
+```{r}
+data.in2 <- data.in2 %>%
+        filter(Diff <0.1)
+```
+
+
+
+Least squares fit
+
+```{r}
+fit <- lm(data.in2$B~data.in2$A)
+summary(fit)
+
+```
+The above printout of the least squares calculation gives a slope of 0.9777, an intercept of 0.0956 and an R2 of 0.9994.
+
+```{r}
+confint(fit)
+```
+When the 95% confidence interval is included around the slope and intercept it can be seen that both are significant: The slope range does not include 1 and the intercept does not include 0.  However the following plot indicates that these issues are more theoretical than practical.
+
+### Plot Values ###
+
+```{r}
+
+vitc_plot <- ggplot(data.in2, aes(x=A, y=B)) +
+        geom_point(size = 4, shape = 21, fill = "bisque", col = "cornflowerblue") +
+        geom_smooth(method = lm) +
+        geom_abline(slope = 1, intercept = 0, lty = 2, colour = "red") +
+        labs(x = An,y = Bn) +
+        theme_bw() +
+        theme(axis.line = element_line(size = 0.7, color = "black"), 
+              text = element_text(size = 14))
+
+vitc_plot
+```
+
+To further explore the differences, a TOST test is performed.
+
+### Two One-sided t Tests (TOST) ###
+
+Nominal difference = 0.1
+
+```{r}
+vitc_tost <- tost(data.in2$A, data.in2$B, paired = TRUE, epsilon = 0.1)
+vitc_tost
+```
+
+The Ho, that there is a difference between the two data sets is rejected if the epislon, tolerable differnce, is acceptable.  That is, there is not enough information to say that they are different.
+
+To get an idea of what differnce in the results would be significant, a series of TOST tests is done and plotted:
+
+```{r}
+
+n=0.0
+data_tost2 <- rep(0,100)
+data_m <- rep(0,100)
+
+for(i in 1:100){
+        m = n + i*0.005
+        tost_data <- tost(data.in2$A, data.in2$B, paired = TRUE, epsilon = m)
+        data_tost2[i] <- tost_data$tost.p.value
+        data_m[i] <- m
+}
+
+data3 <- as.data.frame(cbind(data_m,data_tost2))
+
+# Plot p values ----------------------------------------------------------
+
+plot_epsilon <- ggplot(data3, aes(x=data_m, y=data_tost2)) +
+        geom_point() +
+        geom_hline(yintercept = 0.05, col = "red", lty = 2) +
+        theme_bw() +
+        theme(axis.line = element_line(size = 0.7, color = "black"), 
+              text = element_text(size = 14))
+plot_epsilon
+
+```
+
+From the chart, it can be seen that the significance threshold is about 0.8.  A closer (iterative) estimate is: 
+```{r, message=FALSE, echo=FALSE}
+data_05 <- data3 %>%
+        filter(data_tost2 >0.05) %>%
+        top_n(-1)
+
+
+data_06 <- data3 %>%
+        filter(data_tost2 <0.05) %>%
+        top_n(1)
+
+data_07 <- rbind(data_05,data_06)
+
+
+
+```
+```{r}
+limit <- data_07[1,1] + (data_07[2,1]-data_07[1,1]) * (data_07[1,2]-0.05)/(data_07[1,2]-data_07[2,2])
+limit
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

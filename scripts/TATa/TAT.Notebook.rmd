@@ -1,0 +1,78 @@
+---
+title: "TAT Investigation"
+output: html_notebook
+---
+
+```{r, warning=FALSE, message=FALSE}
+# Packages ---------------------------------------------------------------
+library(readxl)
+library(lubridate)
+library(tidyr)
+library(dplyr)
+library(ggplot2)
+```
+
+```{r}
+# Data In ----------------------------------------------------------------
+data.in <- read_excel("C:/Users/leekennedy/Desktop/8170448.xlsx")
+data.in <- data.in[,c(1:8,10)]
+colnames(data.in)[6] <- "COMPLETED"
+colnames(data.in)[7] <- "RELEASED"
+colnames(data.in)[5] <- "STARTED"
+data.in$ANALYSIS <- paste(data.in$ANALYSIS,"_",data.in$REPLICATE_COUNT, "_", data.in$STATUS, sep="" )
+
+```
+
+```{r}
+t0 <- sapply(data.in[,2], as.numeric)/3600
+x <- sapply(data.in[,5], as.numeric)/3600
+y <- sapply(data.in[,6], as.numeric)/3600
+z <- sapply(data.in[,7], as.numeric)/3600
+
+
+set <- as.data.frame(cbind(t0, x, y, z))
+
+
+set[2:4] <- set[2:4]-set[,1]
+set <- set[,2:4]
+set <- cbind(data.in[,c(1,3,4)],set)
+
+n <- nrow(set) + 1
+
+set[n,1] <- set[1,1]
+sample_name <- set[1,1]
+set[n,c(2,3)] <- "RELEASE"
+set[n,4] <- max(set[2:n-1,5])
+set[n,5] <- set[1,6]
+set <- set[,c(2,4,5)]
+set$Duration <- set$COMPLETED-set$STARTED
+
+
+set <- set[,c(1,2,4)]
+
+
+```
+
+```{r}
+long_set <- gather(set, Time, Hours, -ANALYSIS)
+```
+
+```{r}
+set_plot <- ggplot(long_set, aes(x=reorder(ANALYSIS, -Hours), y=Hours, fill=Time)) +
+        geom_bar(stat='identity') +
+        scale_fill_manual(values = c("cornflowerblue","burlywood1")) +
+            geom_hline(aes(yintercept=24), lty=2, colour = "red") +
+            geom_hline(aes(yintercept=72), lty=2, colour = "red") +
+            geom_hline(aes(yintercept=120), lty=2, colour = "red") +
+            geom_hline(aes(yintercept=168), lty=2, colour = "red") +
+        coord_flip() +
+        labs(title = paste("Sample Number:",sample_name)) +
+        theme_bw() +
+        theme(panel.grid.major = element_line(size = 0.5, color = "grey"), 
+              axis.line = element_line(size = 0.7, color = "black"), 
+              text = element_text(size = 10))
+set_plot
+
+
+```
+
