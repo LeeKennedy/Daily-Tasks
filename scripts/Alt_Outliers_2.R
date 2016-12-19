@@ -1,5 +1,11 @@
-#x <- read.delim('clipboard', as.is=TRUE, header = FALSE)
+
+
+if((Sys.info()[1] == "Darwin") == TRUE){
 x <- read.delim(pipe('pbpaste'), header = FALSE)
+} else {
+x <- read.delim('clipboard', as.is=TRUE, header = FALSE)
+}
+
 data.in <- as.data.frame(x)
 
 

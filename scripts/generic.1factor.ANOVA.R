@@ -1,10 +1,16 @@
 # Clean environment ------------------------------------------------------
 rm(list = ls())
 
+# packages -----------
+library(readxl)
+
 #Import data -------------------------------------------------------------
 # Data should be in labelled columns with no row labels.
 
-Input <- read.csv("acetic.csv", as.is=TRUE, header = TRUE)
+Input <- read_excel("~/Documents/GitHub/Ammonia_Validation/data/Ammonia by HACH Validation Workbook.xlsx", 
+                    sheet = "ANOVA - High", na = "")
+Input <- Input[1:7,1:6]
+Input <- as.data.frame(sapply(Input, as.numeric))
 
 #Always look at the data -------------------------------------------------
 boxplot(Input, 
