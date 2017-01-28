@@ -10,25 +10,23 @@ library(tabulizer)
 
 # Data Input -------------------------------------------------------------
 
-location <- 'C:\\Users\\leekennedy\\Desktop\\Pesticides Lists\\FreshTest-Test-Codes-and-LORs 2016.pdf'
+location <- '~/Desktop/DTSQ17000252.pdf'
 
 # Extract the table
 out <- extract_tables(location)
 
-out2 <- as.data.frame(out)
+out <- out[c(-1,-2,-7)]
 
-write.csv(out2, "freshtest.csv")
+final <- do.call(rbind, out[-length(out)])
 
-# Data Cleaning ----------------------------------------------------------
-# Joining multipage tables
-#final <- do.call(rbind, out[-length(out)])
+final2 <- as.data.frame(final[1:nrow(final), ])
 
-# table headers get extracted as rows with bad formatting. Dump them.
-#final <- as.data.frame(final[3:nrow(final), ])
+final2 <- final2 %>% 
+  filter(V3 == "mg/kg ") %>% 
+  arrange(V1)
 
-# Column names
-#headers <- c('Notice.Date', 'Effective.Date', 'Received.Date', 'Company', 'City', 
-             'No.of.Employees', 'Layoff/Closure')
+final2 <- final2[,c(1,3,4)]
 
-# Apply custom column names
-#names(final) <- headers
+colnames(final2) <- c("Pesticide", "Units", "LOR")
+
+write.csv(final2, "~/Desktop/pests.csv")
