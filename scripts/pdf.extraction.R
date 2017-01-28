@@ -15,6 +15,8 @@ location <- '~/Desktop/DTSQ17000252.pdf'
 # Extract the table
 out <- extract_tables(location)
 
+# Remove unnecessary rows ------------------------------------------------
+
 out <- out[c(-1,-2,-7)]
 
 final <- do.call(rbind, out[-length(out)])
