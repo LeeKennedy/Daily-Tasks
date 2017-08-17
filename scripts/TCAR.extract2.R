@@ -3,16 +3,18 @@ rm(list=ls())
 
 # Packages ---------------------------------------------------------------
 library(dplyr)
+library(readxl)
 
 # Data input -------------------------------------------------------------
-data <- read.csv("9330783.csv", as.is=TRUE)
+#data <- read.csv("9330783.csv", as.is=TRUE)
+data <- read_excel("~/Desktop/10195463.xlsx")
 colnames(data)[1] <- "SAMPLE_NUMBER"
 
 # Extracting Protein Factor ----------------------------------------------
 ftemp <- data %>%
   filter(grepl("Protein",REPORTED_NAME ))
 
-bits <- unlist(strsplit(ftemp[1,3], ' '))
+bits <- unlist(strsplit(as.character(ftemp[1,3]), ' '))
 bits2 <- substr(bits[4], 1, nchar(bits[4])-1)
 
 nf1 <- as.numeric(bits2)
