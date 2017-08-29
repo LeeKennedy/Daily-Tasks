@@ -3,11 +3,11 @@ rm(list=ls())
 
 # Packages ---------------------------------------------------------------
 library(dplyr)
-library(readxl)
+library(tidyverse)
 
 # Data input -------------------------------------------------------------
-#data <- read.csv("9330783.csv", as.is=TRUE)
-data <- read_excel("~/Desktop/10195463.xlsx")
+data <- read_csv("~/Desktop/10241173.csv")
+#data <- read_excel("~/Desktop/10195463.xlsx")
 colnames(data)[1] <- "SAMPLE_NUMBER"
 
 # Extracting Protein Factor ----------------------------------------------
