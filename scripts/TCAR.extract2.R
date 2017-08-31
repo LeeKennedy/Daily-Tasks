@@ -7,7 +7,8 @@ library(readxl)
 
 # Data input -------------------------------------------------------------
 #data <- read.csv("9330783.csv", as.is=TRUE)
-data <- read_excel("~/Desktop/10195463.xlsx")
+data <- read_excel("S:/Chemistry/Technical Support Projects/TCAR - Reporting Carbohydrates/10241173/Test.xlsx")
+View(Test)
 colnames(data)[1] <- "SAMPLE_NUMBER"
 
 # Extracting Protein Factor ----------------------------------------------
