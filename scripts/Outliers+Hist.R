@@ -67,5 +67,7 @@ ggplot(DF, aes(x=V1, fill=dataset)) +
 
 # Check normality --------------------------------------------------------
 shapiro.test(DF$V1)
-
+#The null-hypothesis of this test is that the population is normally distributed.
+#Thus, if the p-value is less than the chosen alpha level, then the null hypothesis is rejected.
+# But must check the Q-Q Charts
 
