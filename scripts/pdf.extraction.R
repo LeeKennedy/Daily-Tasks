@@ -10,12 +10,14 @@ library(tabulizer)
 
 # Data Input -------------------------------------------------------------
 
-location <- '~/Desktop/DTSQ17000252.pdf'
+location <- '~/Desktop/Page_1.pdf'
 
 # Extract the table
-out <- extract_tables(location)
+out <- extract_tables(location, pages = 1)
 
 # Remove unnecessary rows ------------------------------------------------
+
+
 
 out <- out[c(-1,-2,-7)]
 
