@@ -12,7 +12,7 @@ library(stringr)
 
 
 weekly_list <- function (x, b=FALSE) {
-        fnx <- tidyr::gather(x, key = Area, value = Project, na.rm = FALSE, Major, Minor, Doing, Limbo, `With Lab`, `With IT`, `With Quality`, Done)
+        fnx <- tidyr::gather(x, key = Area, value = Project, na.rm = FALSE, Major, Minor, Doing, `Watch List`,  `With Lab`, `With IT`, `With Quality`, Limbo, Done)
 
         fnx <- na.omit(fnx)
 
@@ -22,7 +22,7 @@ weekly_list <- function (x, b=FALSE) {
         fnx <- fnx[,c(3,1,2)]
         n <- nrow(fnx)
 
-        area <- c("Doing", "Major", "Minor","With Lab", "With Quality", "With IT", "Limbo",  "Done")
+        area <- c("Doing", "Major", "Minor","With Lab", "With Quality", "With IT", "Limbo", "Watch List", "Done")
 
         for (i in 1:n) {
                 fnx$key[i] <- match(fnx$Area[i], area)
