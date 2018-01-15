@@ -49,6 +49,7 @@ weekly_list <- function (x, b=FALSE) {
         fnx$EM <- NA
         fnx$Story <- NA
         fnx$Closed <- NA
+        fnx$Tag <- NA
 
         for (i in 1:n){
 
@@ -66,6 +67,7 @@ weekly_list <- function (x, b=FALSE) {
                         if(grepl("EM", temp[j]) == TRUE) fnx$EM[i] = str_sub(temp[j], start= -5)
                         if(grepl("Story", temp[j]) == TRUE) fnx$Story[i] = str_sub(temp[j], start= -3)
                         if(grepl("Closed", temp[j]) == TRUE) fnx$Closed[i] = str_sub(temp[j], start= -10)
+                        if(grepl("Tag", temp[j]) == TRUE) fnx$Tag[i] = str_sub(temp[j], start= -5)
                 }
         }
 
@@ -84,6 +86,8 @@ weekly_list <- function (x, b=FALSE) {
 #### Data Input -----------------------------
 
 data.in <- read_csv("C:/Users/leekennedy/Downloads/DTS_Projects_full.csv")
+
+data.in <- read_csv("~/Desktop/In Tray/DTS_Projects_full.csv")
 #setwd("~/Desktop")
 setwd("C:/Users/leekennedy/Desktop")
 weekly_list(data.in, FALSE)
