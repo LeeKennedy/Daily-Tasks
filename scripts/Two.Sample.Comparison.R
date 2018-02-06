@@ -9,7 +9,7 @@ library(tidyr)
 library(ggplot2)
 
 # Data Input -------------------------------------------------------------
-data.in <- read_csv("~/Desktop/Two_Samples.csv")
+data.in <- read_csv("C:/Users/leekennedy/Desktop/Cheese.csv")
 
 # Data Cleaning ----------------------------------------------------------
 
