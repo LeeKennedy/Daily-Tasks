@@ -87,7 +87,7 @@ weekly_list <- function (x, b=FALSE) {
 
 data.in <- read_csv("C:/Users/leekennedy/Downloads/DTS_Projects_full.csv")
 
-data.in <- read_csv("~/Desktop/In Tray/DTS_Projects_full.csv")
+#data.in <- read_csv("~/Desktop/In Tray/DTS_Projects_full.csv")
 #setwd("~/Desktop")
 setwd("C:/Users/leekennedy/Desktop")
 weekly_list(data.in, FALSE)
