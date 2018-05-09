@@ -1,7 +1,7 @@
 
 # Select data entry path--------------------------------------------------
-#x <- read.delim('clipboard', as.is=TRUE, header = FALSE)
-x <- read.delim(pipe('pbpaste'), header = FALSE) 
+x <- read.delim('clipboard', as.is=TRUE, header = FALSE)
+#x <- read.delim(pipe('pbpaste'), header = FALSE) 
 
 # Packages ---------------------------------------------------------------
 library(ggplot2)
