@@ -2,14 +2,15 @@
 rm(list=ls())
 
 # Packages ---------------------------------------------------------------
-library(dplyr)
+library(tidyverse)
 library(readxl)
 
 # Data input -------------------------------------------------------------
-#data <- read.csv("9330783.csv", as.is=TRUE)
-data <- read_excel("S:/Chemistry/Technical Support Projects/TCAR - Reporting Carbohydrates/10241173/Test.xlsx")
-View(Test)
-colnames(data)[1] <- "SAMPLE_NUMBER"
+
+data <- read_excel("~/Desktop/11932704.xlsx", 
+                   col_types = c("numeric", "text", "text", 
+                                 "text", "numeric", "numeric", "text", 
+                                 "text", "text", "text", "numeric"))
 
 # Extracting Protein Factor ----------------------------------------------
 ftemp <- data %>%
@@ -46,7 +47,7 @@ options(scipen=999)
 
 # Calculating components -------------------------------------------------
 cho <- data2 %>% 
-        filter(REPORTED_NAME == "Total Carbohydrate") %>% 
+        filter(REPORTED_NAME == "Total Carbohydrate [m/m]") %>% 
         select(ENTRY)
 sugar <- data2 %>% 
         filter(REPORTED_NAME == "Total Sugars") %>% 

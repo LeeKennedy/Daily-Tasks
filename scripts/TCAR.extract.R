@@ -2,11 +2,14 @@
 rm(list=ls())
 
 # Packages ---------------------------------------------------------------
-library(dplyr)
+library(tidyverse)
+library(readxl)
 
 # Data imput -------------------------------------------------------------
-data <- read.csv("8780820.csv", as.is=TRUE)
-colnames(data)[1] <- "SAMPLE_NUMBER"
+data <- read_excel("~/Desktop/11932704.xlsx", 
+                   col_types = c("numeric", "text", "text", 
+                                 "text", "numeric", "numeric", "text", 
+                                 "text", "text", "text", "numeric"))
 
 # Extract sample number --------------------------------------------------
 Sample <- data$SAMPLE_NUMBER[1]
@@ -32,7 +35,7 @@ options(scipen=999)
 
 # Extract CHO & Sugar data -----------------------------------------------
 cho <- data2 %>% 
-        filter(REPORTED_NAME == "Total Carbohydrate") %>% 
+        filter(REPORTED_NAME == "Total Carbohydrate [m/m]") %>% 
         select(ENTRY)
 sugar <- data2 %>% 
         filter(REPORTED_NAME == "Total Sugars") %>% 
@@ -42,7 +45,7 @@ sugar <- data2 %>%
 newrow = as.data.frame(c("Difference",cho-sugar))
 colnames(newrow)[1] <- "REPORTED_NAME"
 data2 = rbind(data2,newrow)
-data2
+ data2
 
 # Calculate salt content (ash reality check) -----------------------------
 salt <- data2 %>% 
