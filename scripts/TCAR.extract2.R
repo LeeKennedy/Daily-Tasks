@@ -21,7 +21,7 @@ bits2 <- substr(bits[4], 1, nchar(bits[4])-1)
 
 nf1 <- as.numeric(bits2)
 
-# Nominate new protein factor --------------------------------------------
+#### Nominate new protein factor --------------------------------------------
 nf2 <- 6.38
 
 Sample <- data$SAMPLE_NUMBER[1]
@@ -89,4 +89,4 @@ data2$ENTRY_2 <- round(data2$ENTRY_2,2)
 data2
 
 # Export table -----------------------------------------------------------
-write.csv(data2, paste(Sample, "_summary.csv", sep=""), row.names=TRUE)
+# write.csv(data2, paste(Sample, "_summary.csv", sep=""), row.names=TRUE)
