@@ -19,10 +19,10 @@ if(b == TRUE){
         boxplot(data.in$A, data.in$B)
 }
 
-summary(data.in)
 
 tost_xy <- tost(A, B, epsilon=E, conf.level = 0.95, var.equal = TRUE)
-tost_xy
+
+return(tost_xy)
 }
 
 # Input data -------------------------------------------------------------
@@ -33,7 +33,7 @@ row_2 <- colnames(data.in)[2]
 colnames(data.in)[2] <- "B"
 
 # Set tolerable difference, epsilon --------------------------------------
-epsilon <- 0.002
+epsilon <- 0.02
 
 # Include TRUE if boxplot required ---------------------------------------
 box_flag <- TRUE
