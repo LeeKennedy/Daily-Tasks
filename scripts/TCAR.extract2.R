@@ -7,10 +7,7 @@ library(readxl)
 
 # Data input -------------------------------------------------------------
 
-data <- read_excel("~/Desktop/11932704.xlsx", 
-                   col_types = c("numeric", "text", "text", 
-                                 "text", "numeric", "numeric", "text", 
-                                 "text", "text", "text", "numeric"))
+data <- read_excel("H:/-- In Progress/12438067.xlsx")
 
 # Extracting Protein Factor ----------------------------------------------
 ftemp <- data %>%
